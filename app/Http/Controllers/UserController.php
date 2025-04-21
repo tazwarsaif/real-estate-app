@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
@@ -202,6 +203,67 @@ class UserController extends Controller
             return redirect()->back()->withErrors(['message' => 'Project not found.']);
         }
         return view('users.editProject', ['project' => $project]);
+    }
+    public function editProject(Request $request, string $id)
+    {
+
+        $new_images = [];
+        if($request->has('new_images')) {
+            $new_images = $request->new_images;
+        }
+        // dd(array_merge($images_to_remove, $new_images));
+        // Validate the request
+        try {
+            $user = session('user');
+            if (!$user) {
+                return redirect()->route('user.login')->with('message', 'Please log in first');
+            }
+            $project = Project::findOrFail($id);
+            if (!$project) {
+                return redirect()->back()->withErrors(['message' => 'Project not found.']);
+            }
+            $validateddata = request()->validate([
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'type' => 'required|string|in:Residential,Commercial',
+                'image_path' => 'nullable|image|mimes:jpg,jpeg',
+                'status' => 'required|string|in:Active,Completed',
+                'no_of_floors' => 'required|integer',
+                'no_of_units' => 'nullable|integer',
+                'size' => 'required|integer',
+            ]);
+            $mainImagePath = $project->image_path;
+            if (request()->hasFile('image_path')) {
+                $mainImage = request()->file('image_path');
+                $fileName = uniqid() . '.' . $mainImage->getClientOriginalExtension();
+                $mainImagePath = $mainImage->storeAs('projects', $fileName, 'public');
+                $mainImagePath = str_replace('public/', '', $mainImagePath); // Relative path
+            }
+            $images_to_remove = $request->images_to_remove;
+            $actual_images = json_decode($project->additional_images, true);
+
+            // Get the images that are not in the actual_images array
+            $images_not_in_actual = array_diff($images_to_remove, $actual_images);
+
+            foreach ($images_not_in_actual as $imagePath) {
+                $relativePath = str_replace(asset('storage/'), '', $imagePath); // Convert full path to relative
+                Storage::disk('public')->delete($relativePath); // Delete the image file physically
+            }
+            $images_to_removePath = [];
+            dd($images_to_remove);
+            if (request()->has('images_to_remove')) {
+                foreach ($images_to_remove as $image) {
+                    $fileName = uniqid() . '.' . $image->getClientOriginalExtension();
+                    $path = $image->storeAs('projects', $fileName, 'public');
+                    $images_to_removePath[] = str_replace('public/', '', $path);
+                }
+
+            }
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => $th->getMessage(),
+            ], 500);
+        }
     }
 
     /**

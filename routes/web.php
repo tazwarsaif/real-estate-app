@@ -16,6 +16,7 @@ Route::prefix('admin')->group(function(){
     Route::get('/create', [UserController::class, 'createProject'])->name('user.createProject');
     Route::post('/create', [UserController::class, 'projectCreate'])->name('user.projectCreate');
     Route::get('/edit/{id}', [UserController::class, 'editProjectView'])->name('user.projectEditView');
+    Route::post('/edit/{id}', [UserController::class, 'editProject'])->name('user.projectEdit');
     Route::post('/delete/{id}', [UserController::class, 'destroy'])->name('user.destroyProject');
 });
 
