@@ -44,7 +44,7 @@
         </div>
         <label for="image_path" class="pt-4 pb-2 text-1xl">Main Image:</label>
         <!-- File Input -->
-        <input type="file" value="{{ asset('storage/' . $project->image_path) }}" name="image_path" id="image_path" accept="image/jpeg" required class="border border-gray-300 rounded px-4 py-2"
+        <input type="file" value="{{ asset('storage/' . $project->image_path) }}" name="image_path" id="image_path" accept="image/jpeg" class="border border-gray-300 rounded px-4 py-2"
             onchange="previewMainImage(event)" >
 
 
@@ -55,7 +55,8 @@
                 <div class="flex flex-col items-center space-y-2 pb-4">
                     <img src="{{ asset('storage/' . $image) }}" alt="Image {{ $index }}" height="100" width="100">
                     <button type="button" onclick="removeImage('{{ $index }}')" class="btn btn-error text-xs p-4 pt-0 pb-0 mt-0 mb-0">X</button>
-                    <input type="hidden" name="images_to_remove[]" value="{{ $index }}" id="remove-{{ $index }}" style="display: none;">
+                    <input type="hidden" name="images_to_remove[]" value="{{ $image }}" id="remove-{{ $index }}" style="display: none;">
+
                 </div>
             @endforeach
         </div>
@@ -114,6 +115,13 @@
     if (imageThumbnail) {
         imageThumbnail.style.display = 'none';
     }
+
+
+    const hiddenInput1 = document.getElementById(`remove-${index}`);
+    if (hiddenInput) {
+            hiddenInput1.remove(); // Remove the hidden input from the DOM
+     }
+
     }
     function previewNewImages(event) {
     const files = event.target.files; // Get the selected files

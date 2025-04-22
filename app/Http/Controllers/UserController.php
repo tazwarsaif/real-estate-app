@@ -238,31 +238,51 @@ class UserController extends Controller
                 $fileName = uniqid() . '.' . $mainImage->getClientOriginalExtension();
                 $mainImagePath = $mainImage->storeAs('projects', $fileName, 'public');
                 $mainImagePath = str_replace('public/', '', $mainImagePath); // Relative path
+                $project->image_path = $mainImagePath;
             }
+             // Main image path
+
             $images_to_remove = $request->images_to_remove;
             $actual_images = json_decode($project->additional_images, true);
 
-            // Get the images that are not in the actual_images array
-            $images_not_in_actual = array_diff($images_to_remove, $actual_images);
-
-            foreach ($images_not_in_actual as $imagePath) {
+            $images_not_in_actual = [];
+            foreach ($images_to_remove as $image) {
+                $imageIndex = array_search($image, $actual_images);
+                if ($imageIndex === true) {
+                    $images_not_in_actual[] = $image;
+                } else {
+                    unset($actual_images[$imageIndex]);
+                }
+            }
+            foreach ($actual_images as $imagePath) {
                 $relativePath = str_replace(asset('storage/'), '', $imagePath); // Convert full path to relative
                 Storage::disk('public')->delete($relativePath); // Delete the image file physically
             }
-            $images_to_removePath = [];
-            dd($images_to_remove);
-            if (request()->has('images_to_remove')) {
-                foreach ($images_to_remove as $image) {
+
+            $images_to_addPath = [];
+            if (request()->hasFile('new_images')) {
+                foreach ($request->file('new_images') as $image) {
                     $fileName = uniqid() . '.' . $image->getClientOriginalExtension();
                     $path = $image->storeAs('projects', $fileName, 'public');
-                    $images_to_removePath[] = str_replace('public/', '', $path);
+                    $images_to_addPath[] = str_replace('public/', '', $path);
                 }
-
             }
+
+            $project->additional_images = json_encode(array_merge($images_to_remove, $images_to_addPath));
+            $project->name = request()->input('name');
+            $project->description = request()->input('description');
+            $project->type = request()->input('type');
+            $project->status = request()->input('status');
+            $project->no_of_floors = request()->input('no_of_floors');
+            $project->no_of_units = request()->input('no_of_units');
+            $project->size = request()->input('size');
+            $project->save();
+            return redirect()->route('user.home')->with('success', 'Project updated successfully!');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Throwable $th) {
-            return response()->json([
-                'message' => $th->getMessage(),
-            ], 500);
+            Log::error('Error updating project: ' . $th->getMessage());
+            return redirect()->back()->with('error', 'An unexpected error occurred. Please try again later.');
         }
     }
 
@@ -310,6 +330,16 @@ class UserController extends Controller
     {
         try {
             $project = Project::findOrFail($id);
+            $images = json_decode($project->additional_images, true);
+            foreach ($images as $imagePath) {
+                $relativePath = str_replace(asset('storage/'), '', $imagePath); // Convert full path to relative
+                Storage::disk('public')->delete($relativePath); // Delete the image file physically
+            }
+            $mainImagePath = $project->image_path;
+            if ($mainImagePath) {
+                $relativePath = str_replace(asset('storage/'), '', $mainImagePath); // Convert full path to relative
+                Storage::disk('public')->delete($relativePath); // Delete the image file physically
+            }
             $project->delete();
             return redirect()->route('user.home')->with('success', 'Project deleted successfully.');
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
