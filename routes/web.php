@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LandingPage;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -20,6 +21,11 @@ Route::prefix('admin')->group(function(){
     Route::post('/delete/{id}', [UserController::class, 'destroy'])->name('user.destroyProject');
 });
 
+
+Route::get('/', [LandingPage::class,'index'])->name('landingPage.index');
+Route::get('/about', [LandingPage::class,'about'])->name('landingPage.about');
+Route::get('/contact', [LandingPage::class,'contact'])->name('landingPage.contact');
+Route::get('/services', [LandingPage::class,'services'])->name('landingPage.services');
 
 
 // Route::get('/login', [UserController::class, 'login'])->name('user.login');
