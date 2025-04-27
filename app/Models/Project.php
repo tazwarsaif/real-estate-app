@@ -12,4 +12,9 @@ class Project extends Model
         'name', 'description', 'type', 'image_path', 'status',
         'no_of_floors', 'no_of_units', 'size', 'additional_images'
     ];
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
 }

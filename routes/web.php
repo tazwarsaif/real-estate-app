@@ -4,7 +4,7 @@ use App\Http\Controllers\LandingPage;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
-
+use Inertia\Inertia;
 Route::prefix('admin')->group(function(){
     Route::get('/login', [UserController::class, 'login'])->name('user.login');
     Route::post('/login', [UserController::class, 'loginAfter'])->name('user.loginAfter');
@@ -22,10 +22,16 @@ Route::prefix('admin')->group(function(){
 });
 
 
+// Route::get('/', [LandingPage::class,'index'])->name('landingPage.index');
 Route::get('/', [LandingPage::class,'index'])->name('landingPage.index');
+Route::get('/projects', [LandingPage::class,'projects'])->name('landingPage.projects');
 Route::get('/about', [LandingPage::class,'about'])->name('landingPage.about');
-Route::get('/contact', [LandingPage::class,'contact'])->name('landingPage.contact');
-Route::get('/services', [LandingPage::class,'services'])->name('landingPage.services');
+Route::fallback(function () {
+    return Inertia::render('NotFound'); // Create a NotFound page if you want
+});
+
+// Route::get('/contact', [LandingPage::class,'contact'])->name('landingPage.contact');
+// Route::get('/services', [LandingPage::class,'services'])->name('landingPage.services');
 
 
 // Route::get('/login', [UserController::class, 'login'])->name('user.login');
