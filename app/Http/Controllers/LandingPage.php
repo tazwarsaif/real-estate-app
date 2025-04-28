@@ -52,8 +52,14 @@ class LandingPage extends Controller
             ->get()
             ->map(function ($project) {
                 $project->image_path = asset('storage/' . $project->image_path);
+                $project->additional_images = json_decode($project->additional_images);
+                $project->additional_images = is_array($project->additional_images) ? array_map(function ($image) {
+                    return asset('storage/' . $image);
+                }, $project->additional_images) : [];
+                $project->allImages = array_merge([$project->image_path], $project->additional_images);
                 return $project;
             });
+        // dd($projects);
         return Inertia::render('Projects', [
             'projects' => $projects,
         ]);

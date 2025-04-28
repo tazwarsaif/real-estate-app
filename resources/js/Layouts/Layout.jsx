@@ -30,13 +30,13 @@ function Navbar() {
             <div className="container mx-auto flex justify-between items-center px-4 py-4 pb-2">
                 {/* Logo */}
                 <div className="text-4xl font-bold text-green-700">
-                    RealEstate
+                    <a href="/">RealEstate</a>
                 </div>
 
                 {/* Navigation Links */}
                 <div className="flex space-x-8">
                     <a
-                        href="#home"
+                        href="/"
                         className="text-gray-700 hover:text-green-700 font-medium"
                     >
                         Home

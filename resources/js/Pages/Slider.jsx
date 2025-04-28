@@ -22,7 +22,7 @@ export default function Slider({ projects }) {
                                 {/* Consistent Image Styling */}
                                 <img
                                     src={projects[0].image_path}
-                                    className="w-full h-full object-cover opacity-50"
+                                    className="w-full h-full object-cover opacity-70"
                                     alt={projects[0].name}
                                 />
                                 {/* Title Text */}
@@ -51,7 +51,7 @@ export default function Slider({ projects }) {
                         <a href="#" className="block relative w-full h-96">
                             <img
                                 src={projects[1].image_path}
-                                className="w-full h-full object-cover opacity-50"
+                                className="w-full h-full object-cover opacity-70"
                                 alt={projects[1].name}
                             />
                             <div className="absolute inset-0 flex items-center justify-center">
@@ -78,7 +78,7 @@ export default function Slider({ projects }) {
                         <a href="#" className="block relative w-full h-96">
                             <img
                                 src={projects[2].image_path}
-                                className="w-full h-full object-cover opacity-50"
+                                className="w-full h-full object-cover opacity-70"
                                 alt={projects[2].name}
                             />
                             <div className="absolute inset-0 flex items-center justify-center">
@@ -105,7 +105,7 @@ export default function Slider({ projects }) {
                         <a href="#" className="block relative w-full h-96">
                             <img
                                 src={projects[3].image_path}
-                                className="w-full h-full object-cover opacity-50"
+                                className="w-full h-full object-cover opacity-70"
                                 alt={projects[3].name}
                             />
                             <div className="absolute inset-0 flex items-center justify-center">
