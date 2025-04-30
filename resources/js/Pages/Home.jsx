@@ -1,6 +1,7 @@
 import Layout from "@/Layouts/Layout.jsx";
 import { motion } from "framer-motion";
 import React, { useEffect, useRef } from "react";
+import Footer from "../Layouts/Footer.jsx";
 import Card from "./Card.jsx";
 import Slider from "./Slider.jsx";
 
@@ -303,6 +304,7 @@ function Home({
                     </motion.div>
                 </motion.div>
             </div>
+            <Footer></Footer>
         </>
     );
 }
