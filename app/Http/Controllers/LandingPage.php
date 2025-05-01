@@ -48,7 +48,7 @@ class LandingPage extends Controller
     public function projects(Request $request)
     {
         try {
-            if($request->query('search')){
+            if($request->query('search') !== 'null' && $request->query('search')){
                 $projects = Project::withAvg('reviews', 'rating')
                 ->where('name', 'like', '%' . $request->query('search') . '%')
                 ->orWhere('description', 'like', '%' . $request->query('search') . '%')
@@ -63,17 +63,81 @@ class LandingPage extends Controller
                     $project->allImages = array_merge([$project->image_path], $project->additional_images);
                     return $project;
                 });
-                dd($projects, $request->query('category'), $request->query('search'));
-                if($request->query('category') == 'Residential'){
-                    $projects = $projects->where('type', 'Residential');
-                }
-                elseif($request->query('category') == 'Commercial'){
-                    $projects = $projects->where('type', 'Commercial');
-                }
+            if($request->query('category')==="All"){
                 return Inertia::render('Projects', [
                     'projects' => $projects,
                     'searchPast' => $request->search,
+                    'category' => $request->query('category')
                 ]);
+            }
+            elseif($request->query('category')==="Commercial"){
+                $projects = $projects->filter(function ($project) {
+                    return $project->type === 'Commercial';
+                });
+                return Inertia::render('Projects', [
+                    'projects' => $projects,
+                    'searchPast' => $request->search,
+                    'category' => $request->query('category')
+                ]);
+            }
+            elseif($request->query('category')==="Residential"){
+                $projects = $projects->filter(function ($project) {
+                    return $project->type === 'Residential';
+                });
+                return Inertia::render('Projects', [
+                    'projects' => $projects,
+                    'searchPast' => $request->search,
+                    'category' => $request->query('category')
+                ]);
+            }
+
+
+
+            }
+            elseif($request->query('search')=='' || $request->query('search')=='null'){
+                $projects = Project::withAvg('reviews', 'rating')
+                ->where('name', 'like', '%' . '' . '%')
+                ->orWhere('description', 'like', '%' . '' . '%')
+                ->orderBy('reviews_avg_rating', 'desc')
+                ->get()
+                ->map(function ($project) {
+                    $project->image_path = asset('storage/' . $project->image_path);
+                    $project->additional_images = json_decode($project->additional_images);
+                    $project->additional_images = is_array($project->additional_images) ? array_map(function ($image) {
+                        return asset('storage/' . $image);
+                    }, $project->additional_images) : [];
+                    $project->allImages = array_merge([$project->image_path], $project->additional_images);
+                    return $project;
+                });
+            if($request->query('category')==="All" || $request->query('category')==null || $request->query('category')== ''){
+                return Inertia::render('Projects', [
+                    'projects' => $projects,
+                    'searchPast' => '',
+                    'category' => $request->query('category')
+                ]);
+            }
+            elseif($request->query('category')==="Commercial"){
+                $projects = $projects->filter(function ($project) {
+                    return $project->type === 'Commercial';
+                });
+                return Inertia::render('Projects', [
+                    'projects' => $projects,
+                    'searchPast' => '',
+                    'category' => $request->query('category')
+                ]);
+            }
+            elseif($request->query('category')==="Residential"){
+                $projects = $projects->filter(function ($project) {
+                    return $project->type === 'Residential';
+                });
+                return Inertia::render('Projects', [
+                    'projects' => $projects,
+                    'searchPast' => '',
+                    'category' => $request->query('category')
+                ]);
+            }
+
+
 
             }
             else{
@@ -95,6 +159,7 @@ class LandingPage extends Controller
         return Inertia::render('Projects', [
             'projects' => $projects,
             'searchPast' => null,
+            'category' => 'All'
         ]);
         } catch (\Throwable $th) {
             //throw $th;
@@ -122,5 +187,8 @@ class LandingPage extends Controller
             });
             return response()->json($projects);
 
+    }
+    public function contactView(){
+        return Inertia::render('Contact');
     }
 }

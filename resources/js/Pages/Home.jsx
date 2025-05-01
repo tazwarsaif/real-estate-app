@@ -1,9 +1,10 @@
 import Layout from "@/Layouts/Layout.jsx";
 import { motion } from "framer-motion";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Footer from "../Layouts/Footer.jsx";
 import Card from "./Card.jsx";
 import Slider from "./Slider.jsx";
+import { router } from "@inertiajs/react";
 
 function Home({
     reviews,
@@ -13,6 +14,11 @@ function Home({
     mostRatedProjects,
 }) {
     const scrollContainerRef = useRef(null);
+    const [searchProject, setSearchProject] = useState("");
+
+    const settingText = (e) => {
+        setSearchProject(e.target.value);
+    };
 
     useEffect(() => {
         const scrollContainer = scrollContainerRef.current;
@@ -37,6 +43,13 @@ function Home({
         // Clear the interval on unmount
         return () => clearInterval(scrollInterval);
     }, []);
+    const handleClick = () => {
+        if (searchProject != null) {
+            router.visit(`/projects?search=${searchProject}&category=All`);
+        } else {
+            router.visit(`/projects?search=&category=All`);
+        }
+    };
     return (
         <>
             <Layout />
@@ -96,16 +109,26 @@ function Home({
                                         className="text-xl p-2 py-3"
                                         placeholder="Enter a project name"
                                         name="project_name"
+                                        onChange={settingText}
                                     />
                                 </label>
                                 <div className="validator-hint hidden">
                                     Enter a name of project
                                 </div>
                             </div>
-                            <button className="btn btn-neutral join-item">
+                            <button
+                                className="btn btn-neutral join-item"
+                                onClick={handleClick}
+                            >
                                 Search
                             </button>
                         </div>
+                        <a
+                            className="btn bg-black text-white join-item mt-3 rounded-3xl"
+                            href="/projects"
+                        >
+                            >> See All Projects
+                        </a>
                     </motion.div>
                 </motion.div>
 
@@ -301,6 +324,72 @@ function Home({
                             ))}
                             {/* Add more Card components here if needed */}
                         </motion.div>
+                    </motion.div>
+                </motion.div>
+
+                <motion.div
+                    className="w-full"
+                    initial={{ opacity: 0 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 1 }}
+                >
+                    {/* Stats Section */}
+                    <motion.div
+                        className="flex justify-center mt-10"
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        whileInView={{ scale: 1, opacity: 1 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8 }}
+                    >
+                        <div className="hero h-screen">
+                            <div className="hero-content flex-col lg:flex-row-reverse">
+                                <img
+                                    src="https://images.unsplash.com/photo-1596524430615-b46475ddff6e?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29udGFjdCUyMHVzfGVufDB8fDB8fHww"
+                                    className="max-w-sm rounded-lg shadow-2xl"
+                                />
+                                <div>
+                                    <h1 className="text-5xl font-bold">
+                                        Contact Us
+                                    </h1>
+                                    <p className="py-6 text-2xl">
+                                        Provident cupiditate voluptatem et in.
+                                        Quaerat fugiat ut assumenda excepturi
+                                        exercitationem quasi. In deleniti eaque
+                                        aut repudiandae et a id nisi.
+                                        <ul>
+                                            <li>
+                                                # Need help or looking for a
+                                                quote?
+                                            </li>
+                                            <li>
+                                                # Fill out the form below and
+                                                we’ll be in touch as soon as
+                                                possible.
+                                            </li>
+                                            <li>
+                                                # Or give us a call at [Your
+                                                Phone Number].
+                                            </li>
+                                        </ul>
+                                    </p>
+                                    <motion.div
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
+                                        className="h-100 w-100 flex p-10 items-center justify-center cursor-pointer rounded-4xl border-2 border-transparent bg-green-600 text-white transition-all duration-200 hover:border-green-600 hover:bg-white hover:text-green-600 md:h-12 md:w-12"
+                                    >
+                                        <a
+                                            href="/contact"
+                                            className="text-center"
+                                        >
+                                            Get Started
+                                        </a>
+                                    </motion.div>
+
+                                    <div className="flex"></div>
+                                </div>
+                            </div>
+                        </div>
                     </motion.div>
                 </motion.div>
             </div>

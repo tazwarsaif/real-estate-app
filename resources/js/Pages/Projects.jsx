@@ -3,9 +3,15 @@ import { motion } from "framer-motion";
 import React, { useState } from "react";
 import Layout from "../Layouts/Layout";
 
-export default function Projects({ projects, searchPast }) {
+export default function Projects({ projects, searchPast, category }) {
+    let temparr = projects;
+    if (typeof projects == "object") {
+        temparr = Object.values(projects);
+    }
     const [previewImage, setPreviewImage] = useState(null); // manage current previewed image
-    const [selectedCategory, setSelectedCategory] = useState("All");
+    const [selectedCategory, setSelectedCategory] = useState(
+        category ? category : "All"
+    );
     const handlePreview = (image) => {
         setPreviewImage(image);
     };
@@ -24,9 +30,9 @@ export default function Projects({ projects, searchPast }) {
         );
     };
 
-    const handleCategoryChange = (e) => {
-        console.log(e.target.value);
+    const handleCategoryChange = (e, projects) => {
         setSelectedCategory(e.target.value);
+        console.log(e.target.value);
     };
 
     return (
@@ -71,7 +77,6 @@ export default function Projects({ projects, searchPast }) {
                                                 </svg>
                                                 <input
                                                     type="search"
-                                                    required
                                                     placeholder="Search"
                                                     value={search}
                                                     name="search"
@@ -92,42 +97,26 @@ export default function Projects({ projects, searchPast }) {
 
                                     <div className="flex justify-center items-center">
                                         <select
-                                            defaultValue="Pick a color"
                                             className="select"
-                                            onChange={handleCategoryChange}
+                                            value={selectedCategory}
+                                            onChange={(e) =>
+                                                handleCategoryChange(
+                                                    e,
+                                                    projects
+                                                )
+                                            }
                                             name="category"
                                         >
-                                            <option
-                                                value="All"
-                                                selected={
-                                                    selectedCategory === "All"
-                                                }
-                                            >
-                                                All
-                                            </option>
-                                            <option
-                                                selected={
-                                                    selectedCategory ===
-                                                    "Residential"
-                                                }
-                                            >
-                                                Residential
-                                            </option>
-                                            <option
-                                                selected={
-                                                    selectedCategory ===
-                                                    "Commercial"
-                                                }
-                                            >
-                                                Commercial
-                                            </option>
+                                            <option>All</option>
+                                            <option>Residential</option>
+                                            <option>Commercial</option>
                                         </select>
                                     </div>
                                 </div>
                             </form>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {projects.map((project) => (
+                            {temparr.map((project) => (
                                 <div
                                     key={project.id}
                                     className="border rounded-lg shadow hover:shadow-lg transition-shadow duration-300 cursor-pointer"

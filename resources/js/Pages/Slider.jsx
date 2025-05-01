@@ -18,7 +18,10 @@ export default function Slider({ projects }) {
                         className="carousel-item relative w-full h-96 overflow-hidden"
                     >
                         <div className="relative w-full h-96">
-                            <a href="#" className="block relative w-full h-96">
+                            <a
+                                href={`/projects?category=${projects[0].type}&search=${projects[0].name}`}
+                                className="block relative w-full h-96"
+                            >
                                 {/* Consistent Image Styling */}
                                 <img
                                     src={projects[0].image_path}
@@ -48,7 +51,10 @@ export default function Slider({ projects }) {
                         id="slide2"
                         className="carousel-item relative w-full h-96 overflow-hidden"
                     >
-                        <a href="#" className="block relative w-full h-96">
+                        <a
+                            href={`/projects?category=${projects[1].type}&search=${projects[1].name}`}
+                            className="block relative w-full h-96"
+                        >
                             <img
                                 src={projects[1].image_path}
                                 className="w-full h-full object-cover opacity-70"
@@ -75,7 +81,10 @@ export default function Slider({ projects }) {
                         id="slide3"
                         className="carousel-item relative w-full h-96 overflow-hidden"
                     >
-                        <a href="#" className="block relative w-full h-96">
+                        <a
+                            href={`/projects?category=${projects[2].type}&search=${projects[2].name}`}
+                            className="block relative w-full h-96"
+                        >
                             <img
                                 src={projects[2].image_path}
                                 className="w-full h-full object-cover opacity-70"
@@ -102,7 +111,10 @@ export default function Slider({ projects }) {
                         id="slide4"
                         className="carousel-item relative w-full h-96 overflow-hidden"
                     >
-                        <a href="#" className="block relative w-full h-96">
+                        <a
+                            href={`/projects?category=${projects[3].type}&search=${projects[3].name}`}
+                            className="block relative w-full h-96"
+                        >
                             <img
                                 src={projects[3].image_path}
                                 className="w-full h-full object-cover opacity-70"

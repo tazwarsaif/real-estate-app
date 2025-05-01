@@ -50,13 +50,7 @@ function Navbar() {
                     </a>
 
                     <a
-                        href="#listings"
-                        className="text-gray-700 hover:text-green-700 font-medium"
-                    >
-                        Listings
-                    </a>
-                    <a
-                        href="#contact"
+                        href="/contact"
                         className="text-gray-700 hover:text-green-700 font-medium"
                     >
                         Contact
