@@ -8,6 +8,7 @@ export default function Projects({ projects, searchPast, category }) {
     if (typeof projects == "object") {
         temparr = Object.values(projects);
     }
+    const [isFocused, setIsFocused] = useState(false);
     const [previewImage, setPreviewImage] = useState(null); // manage current previewed image
     const [selectedCategory, setSelectedCategory] = useState(
         category ? category : "All"
@@ -35,6 +36,19 @@ export default function Projects({ projects, searchPast, category }) {
         console.log(e.target.value);
     };
 
+    const [query, setQuery] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
+
+    const handleInputChange = async (e) => {
+        const value = e.target.value;
+        setQuery(value);
+
+        // fetch suggestions
+        const res = await fetch(`/search/suggestions?q=${value}`);
+        const data = await res.json();
+        setSuggestions(data);
+    };
+
     return (
         <>
             <Layout />
@@ -53,8 +67,8 @@ export default function Projects({ projects, searchPast, category }) {
                             >
                                 <div className="flex justify-center items-center w-full">
                                     <div className="flex justify-items-end w-full max-w-2xl">
-                                        <div>
-                                            <label className="input">
+                                        <div className="relative w-full">
+                                            <label className="input w-full">
                                                 <svg
                                                     className="h-[1em] opacity-50"
                                                     xmlns="http://www.w3.org/2000/svg"
@@ -75,19 +89,86 @@ export default function Projects({ projects, searchPast, category }) {
                                                         <path d="m21 21-4.3-4.3"></path>
                                                     </g>
                                                 </svg>
-                                                <input
-                                                    type="search"
-                                                    placeholder="Search"
-                                                    value={search}
-                                                    name="search"
-                                                    onChange={settingText}
-                                                />
+                                                <div className="flex flex-col w-full">
+                                                    <div>
+                                                        <input
+                                                            type="search"
+                                                            placeholder="Search"
+                                                            value={search}
+                                                            name="search"
+                                                            onChange={(e) => {
+                                                                settingText(e);
+                                                                handleInputChange(
+                                                                    e
+                                                                );
+                                                            }}
+                                                            onFocus={() =>
+                                                                setIsFocused(
+                                                                    true
+                                                                )
+                                                            }
+                                                            onBlur={() =>
+                                                                setTimeout(
+                                                                    () =>
+                                                                        setIsFocused(
+                                                                            false
+                                                                        ),
+                                                                    200
+                                                                )
+                                                            } // Delay for click
+                                                            className="relative z-10 p-2 w-full"
+                                                        />
+                                                    </div>
+
+                                                    {isFocused &&
+                                                        suggestions.length >
+                                                            0 && (
+                                                            <ul className="absolute top-full left-0 w-full bg-white shadow-md z-20 max-h-60 overflow-auto">
+                                                                {suggestions.map(
+                                                                    (
+                                                                        item,
+                                                                        index
+                                                                    ) => (
+                                                                        <li
+                                                                            key={
+                                                                                index
+                                                                            }
+                                                                            className="p-2 cursor-pointer hover:bg-gray-200"
+                                                                            onClick={() => {
+                                                                                setSearch(
+                                                                                    item
+                                                                                ); // optional: update field
+                                                                                setIsFocused(
+                                                                                    false
+                                                                                );
+                                                                                router.get(
+                                                                                    `/projects`,
+                                                                                    {
+                                                                                        search: item,
+                                                                                        category:
+                                                                                            selectedCategory,
+                                                                                    },
+                                                                                    {
+                                                                                        preserveState: true,
+                                                                                    }
+                                                                                );
+                                                                            }}
+                                                                        >
+                                                                            {
+                                                                                item
+                                                                            }
+                                                                        </li>
+                                                                    )
+                                                                )}
+                                                            </ul>
+                                                        )}
+                                                </div>
                                             </label>
                                         </div>
 
                                         <div>
                                             <button
-                                                className="btn bg-green-800 text-white ml-2"
+                                                className="btn bg-green-800 text-white ml-2 mr-3"
                                                 type="submit"
                                             >
                                                 Search

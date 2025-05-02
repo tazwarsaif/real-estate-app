@@ -376,13 +376,13 @@ function Home({
                                     <motion.div
                                         whileHover={{ scale: 1.1 }}
                                         whileTap={{ scale: 0.9 }}
-                                        className="h-100 w-100 flex p-10 items-center justify-center cursor-pointer rounded-4xl border-2 border-transparent bg-green-600 text-white transition-all duration-200 hover:border-green-600 hover:bg-white hover:text-green-600 md:h-12 md:w-12"
+                                        className="h-100 w-100 flex p-7 items-center justify-center cursor-pointer border-2 rounded-full border-transparent bg-green-600 text-white transition-all duration-200 hover:border-green-600 hover:bg-white hover:text-green-600 md:h-12 md:w-12"
                                     >
                                         <a
                                             href="/contact"
-                                            className="text-center"
+                                            className="text-center p-10"
                                         >
-                                            Get Started
+                                            📝
                                         </a>
                                     </motion.div>
 
