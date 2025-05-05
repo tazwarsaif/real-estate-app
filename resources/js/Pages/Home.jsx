@@ -1,10 +1,10 @@
 import Layout from "@/Layouts/Layout.jsx";
+import { router } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 import Footer from "../Layouts/Footer.jsx";
 import Card from "./Card.jsx";
 import Slider from "./Slider.jsx";
-import { router } from "@inertiajs/react";
 
 function Home({
     reviews,
@@ -23,46 +23,40 @@ function Home({
     useEffect(() => {
         const scrollContainer = scrollContainerRef.current;
         let scrollAmount = 0;
-
         const scrollCards = () => {
             if (scrollContainer) {
-                scrollContainer.scrollLeft += 1; // Scroll 1px at a time
+                scrollContainer.scrollLeft += 1;
                 scrollAmount += 1;
-
-                // Reset the scroll when it reaches the end
                 if (scrollAmount >= scrollContainer.scrollWidth) {
                     scrollContainer.scrollLeft = 0;
                     scrollAmount = 0;
                 }
             }
         };
-
-        // Set interval for auto-scroll
-        const scrollInterval = setInterval(scrollCards, 10); // Scroll every 10ms (adjust speed here)
-
-        // Clear the interval on unmount
+        const scrollInterval = setInterval(scrollCards, 10);
         return () => clearInterval(scrollInterval);
     }, []);
+
     const handleClick = () => {
-        if (searchProject != null) {
-            router.visit(`/projects?search=${searchProject}&category=All`);
-        } else {
-            router.visit(`/projects?search=&category=All`);
-        }
+        const q = searchProject ?? "";
+        router.visit(`/projects?search=${q}&category=All`);
     };
+
     return (
-        <>
+        <div className="flex flex-col min-h-screen">
             <Layout />
-            <div className="container mx-auto px-2 py-10 pt-22 flex flex-col space-y-20">
-                {/* Top Section */}
+
+            <main className="container mx-auto px-4 py-8 mt-12 flex flex-col space-y-16 flex-grow">
+                {/* Hero / Top Section */}
                 <motion.div
-                    className="flex justify-between space-x-7"
+                    className="flex flex-col-reverse lg:flex-row justify-between space-y-10 lg:space-y-0 lg:space-x-7"
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1 }}
                 >
                     {/* Left Image */}
                     <motion.div
+                        className="flex justify-center lg:justify-start"
                         initial={{ x: -100, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ duration: 1, delay: 0.3 }}
@@ -70,132 +64,104 @@ function Home({
                         <img
                             src="/storage/landing/index.png"
                             alt="Building image"
-                            className="h-170"
+                            className="h-64 mt-7 md:h-96 lg:h-[1000px] object-contain"
                         />
                     </motion.div>
 
                     {/* Right Content */}
                     <motion.div
-                        className="flex flex-col justify-center items-end w-xl"
+                        className="flex flex-col justify-center items-center lg:items-end w-full"
                         initial={{ x: 100, opacity: 0 }}
                         animate={{ x: 0, opacity: 1 }}
                         transition={{ duration: 1, delay: 0.6 }}
                     >
-                        {/* Heading */}
-                        <div className="text-right mt-5">
-                            <h1 className="text-4xl font-bold">
+                        <div className="text-center lg:text-right mt-5 px-2">
+                            <h1 className="text-3xl md:text-4xl font-bold">
                                 Find your perfect place to call{" "}
-                                <span className="text-5xl font-bold text-green-700">
+                                <span className="text-green-700 text-4xl md:text-5xl font-bold">
                                     home
                                 </span>
                             </h1>
+                            <p className="mt-3 text-base md:text-xl">
+                                Whether you're buying, renting, or investing,
+                                explore stunning properties...
+                            </p>
                         </div>
 
-                        {/* Paragraph */}
-                        <p className="text-right mt-3 text-xl">
-                            Whether you're buying, renting, or investing,
-                            explore stunning properties handpicked to match your
-                            lifestyle. With trusted agents and seamless tools,
-                            your dream home is just a few clicks away.
-                        </p>
-
                         {/* Search Input */}
-                        <div className="join mt-4">
-                            <div>
-                                <label className="input validator join-item">
-                                    <input
-                                        type="email"
-                                        required
-                                        className="text-xl p-2 py-3"
-                                        placeholder="Enter a project name"
-                                        name="project_name"
-                                        onChange={settingText}
-                                    />
-                                </label>
-                                <div className="validator-hint hidden">
-                                    Enter a name of project
-                                </div>
-                            </div>
+                        <div className="join mt-4 flex flex-col sm:flex-row items-center">
+                            <label className="input validator join-item w-full sm:w-auto mb-3 sm:mb-0">
+                                <input
+                                    type="text"
+                                    className="text-lg p-2 py-3 w-full sm:w-auto"
+                                    placeholder="Enter a project name"
+                                    onChange={settingText}
+                                />
+                            </label>
                             <button
-                                className="btn btn-neutral join-item"
+                                className="btn btn-neutral join-item w-full sm:w-auto"
                                 onClick={handleClick}
                             >
                                 Search
                             </button>
                         </div>
                         <a
-                            className="btn bg-black text-white join-item mt-3 rounded-3xl"
+                            className="btn bg-black text-white mt-3 rounded-3xl w-fit"
                             href="/projects"
                         >
-                            >> See All Projects
+                            &gt;&gt; See All Projects
                         </a>
                     </motion.div>
                 </motion.div>
 
-                {/* Featured Section */}
+                {/* Featured Projects */}
                 <motion.div
-                    className="w-full"
+                    className="space-y-4"
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1 }}
                 >
-                    <h1 className="text-4xl font-bold text-center mt-5">
-                        Contruction Projects
-                    </h1>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-center">
+                        Construction Projects
+                    </h2>
 
-                    <div className="grid grid-cols-3 gap-4 mt-5">
-                        {/* Featured items here later */}
-                    </div>
-
-                    {/* Stats Section */}
-                    <motion.div
-                        className="flex justify-center mt-10"
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        whileInView={{ scale: 1, opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        <div className="stats shadow">
-                            {/* Stat 1 */}
-                            <div className="stat w-xl">
-                                <div className="stat-figure text-primary">
-                                    <img
-                                        src="/storage/landing/houseBuilding.png"
-                                        alt="house building"
-                                        height="50"
-                                        width="50"
-                                    />
-                                </div>
-                                <div className="stat-title">
-                                    Total Residential Projects
-                                </div>
-                                <div className="stat-value text-primary">
-                                    {residentialProjects}
-                                </div>
+                    {/* Stats */}
+                    <div className="stats shadow stats-vertical sm:stats-horizontal w-full justify-center">
+                        <div className="stat">
+                            <div className="stat-figure text-primary">
+                                <img
+                                    src="/storage/landing/houseBuilding.png"
+                                    alt="residential"
+                                    className="h-12 w-12"
+                                />
                             </div>
-
-                            {/* Stat 2 */}
-                            <div className="stat w-xl">
-                                <div className="stat-figure text-accent">
-                                    <img
-                                        src="/storage/landing/commercialBuilding.png"
-                                        alt="commercial building"
-                                        height="50"
-                                        width="50"
-                                    />
-                                </div>
-                                <div className="stat-title">
-                                    Total Commercial Projects
-                                </div>
-                                <div className="stat-value text-accent">
-                                    {commercialProjects}
-                                </div>
+                            <div className="stat-title">
+                                Total Residential Projects
+                            </div>
+                            <div className="stat-value text-primary">
+                                {residentialProjects}
                             </div>
                         </div>
-                    </motion.div>
+                        <div className="stat">
+                            <div className="stat-figure text-accent">
+                                <img
+                                    src="/storage/landing/commercialBuilding.png"
+                                    alt="commercial"
+                                    className="h-12 w-12"
+                                />
+                            </div>
+                            <div className="stat-title">
+                                Total Commercial Projects
+                            </div>
+                            <div className="stat-value text-accent">
+                                {commercialProjects}
+                            </div>
+                        </div>
+                    </div>
                 </motion.div>
 
+                {/* Timeline */}
                 <motion.div
                     className="w-full"
                     initial={{ opacity: 0 }}
@@ -282,119 +248,65 @@ function Home({
                     </motion.div>
                 </motion.div>
 
-                <h1 className="text-4xl font-bold text-center mt-5">
-                    Explore Our Featured Projects
-                </h1>
+                {/* Slider: Featured */}
+                <div>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4">
+                        Explore Our Featured Projects
+                    </h2>
+                    <Slider projects={mostRatedProjects} />
+                </div>
 
-                <Slider projects={mostRatedProjects} />
+                {/* Testimonials */}
+                <div>
+                    <h2 className="text-2xl sm:text-3xl font-bold text-center mb-4">
+                        Testimonials
+                    </h2>
+                    <div
+                        ref={scrollContainerRef}
+                        className="flex space-x-4 overflow-x-auto no-scrollbar pb-4"
+                    >
+                        {reviews.map((rv) => (
+                            <Card
+                                key={rv.id}
+                                review={rv}
+                                className="w-64 flex-shrink-0"
+                            />
+                        ))}
+                    </div>
+                </div>
 
-                <h1 className="text-4xl font-bold text-center mt-5">
-                    Testimonials
-                </h1>
-
+                {/* Contact Section */}
                 <motion.div
-                    className="w-full"
+                    className="flex flex-col lg:flex-row gap-8 items-center lg:items-start"
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 1 }}
                 >
-                    {/* Stats Section */}
-                    <motion.div
-                        className="flex justify-start space-x-5 overflow-hidden w-full"
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        whileInView={{ scale: 1, opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        {/* Card components inside a wrapper with animation */}
-                        <motion.div
-                            className="flex space-x-5 animate-scroll"
-                            initial={{ opacity: 0 }}
-                            whileInView={{ opacity: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8 }}
+                    <img
+                        src="https://images.unsplash.com/photo-1596524430615-b46475ddff6e"
+                        alt="Contact"
+                        className="w-full lg:w-1/2 rounded-lg shadow-lg object-cover max-h-80"
+                    />
+                    <div className="w-full lg:w-1/2 space-y-4 text-center lg:text-left">
+                        <h2 className="text-3xl font-bold">Contact Us</h2>
+                        <p className="text-lg">
+                            Provident cupiditate voluptatem … in touch as soon
+                            as possible.
+                        </p>
+
+                        <a
+                            href="/contact"
+                            className="btn btn-outline btn-success w-full"
                         >
-                            {reviews.map((review) => (
-                                <Card
-                                    key={review.id}
-                                    review={review}
-                                    className="w-1/3"
-                                />
-                            ))}
-                            {/* Add more Card components here if needed */}
-                        </motion.div>
-                    </motion.div>
+                            📝
+                        </a>
+                    </div>
                 </motion.div>
+            </main>
 
-                <motion.div
-                    className="w-full"
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 1 }}
-                >
-                    {/* Stats Section */}
-                    <motion.div
-                        className="flex justify-center mt-10"
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        whileInView={{ scale: 1, opacity: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.8 }}
-                    >
-                        <div className="hero h-screen">
-                            <div className="hero-content flex-col lg:flex-row-reverse">
-                                <img
-                                    src="https://images.unsplash.com/photo-1596524430615-b46475ddff6e?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Y29udGFjdCUyMHVzfGVufDB8fDB8fHww"
-                                    className="max-w-sm rounded-lg shadow-2xl"
-                                />
-                                <div>
-                                    <h1 className="text-5xl font-bold">
-                                        Contact Us
-                                    </h1>
-                                    <p className="py-6 text-2xl">
-                                        Provident cupiditate voluptatem et in.
-                                        Quaerat fugiat ut assumenda excepturi
-                                        exercitationem quasi. In deleniti eaque
-                                        aut repudiandae et a id nisi.
-                                        <ul>
-                                            <li>
-                                                # Need help or looking for a
-                                                quote?
-                                            </li>
-                                            <li>
-                                                # Fill out the form below and
-                                                we’ll be in touch as soon as
-                                                possible.
-                                            </li>
-                                            <li>
-                                                # Or give us a call at [Your
-                                                Phone Number].
-                                            </li>
-                                        </ul>
-                                    </p>
-                                    <motion.div
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        className="h-100 w-100 flex p-7 items-center justify-center cursor-pointer border-2 rounded-full border-transparent bg-green-600 text-white transition-all duration-200 hover:border-green-600 hover:bg-white hover:text-green-600 md:h-12 md:w-12"
-                                    >
-                                        <a
-                                            href="/contact"
-                                            className="text-center p-10"
-                                        >
-                                            📝
-                                        </a>
-                                    </motion.div>
-
-                                    <div className="flex"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </motion.div>
-                </motion.div>
-            </div>
-            <Footer></Footer>
-        </>
+            <Footer />
+        </div>
     );
 }
 

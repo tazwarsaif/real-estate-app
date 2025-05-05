@@ -207,7 +207,7 @@ export default function Projects({ projects, searchPast, category }) {
                                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                     {projects.length == 0 && (
                                         <div className="flex justify-center items-center text-center text-4xl">
-                                            <h1 className="text-center">
+                                            <h1 className="text-center mt-7">
                                                 No Projects Found
                                             </h1>
                                         </div>
