@@ -27,7 +27,6 @@ Route::get('/', [LandingPage::class,'index'])->name('landingPage.index');
 Route::get('/projects', [LandingPage::class,'projects'])->name('landingPage.projects');
 Route::get('/about', [LandingPage::class,'about'])->name('landingPage.about');
 Route::get('/contact', [LandingPage::class,'contactView'])->name('landingPage.contactView');
-Route::post('/contact', [LandingPage::class,'contactPost'])->name('landingPage.contactPost');
 Route::get('/search/suggestions', [LandingPage::class,'projectSearch'])->name('landingPage.projectSearch');
 Route::fallback(function () {
     return Inertia::render('NotFound'); // Create a NotFound page if you want

@@ -15,7 +15,7 @@
 
         <!-- Description -->
         <label for="description" class="pt-4 pb-2 text-1xl">Description:</label>
-        <textarea name="description" id="description" rows="4" class="border border-gray-300 rounded px-4 py-2" placeholder="Enter project name">{{ $project->description }}</textarea>
+        <textarea name="description" id="description" rows="4" class="border border-gray-300 rounded px-4 py-2" placeholder="Enter Description">{{ $project->description }}</textarea>
 
         <!-- Type -->
         <label for="type" class="pt-4 pb-2 text-1xl">Type:</label>
@@ -85,18 +85,18 @@
 
         <!-- Number of Floors -->
         <label for="no_of_floors" class="pt-4 pb-2 text-1xl">Number of Floors:</label>
-        <input type="number" name="no_of_floors" id="no_of_floors" required class="border border-gray-300 rounded px-4 py-2" placeholder="Enter project name" value="{{ $project->no_of_floors }}" >
+        <input type="number" name="no_of_floors" id="no_of_floors" required class="border border-gray-300 rounded px-4 py-2" placeholder="Enter number of floors" value="{{ $project->no_of_floors }}" >
 
         <!-- Number of Units -->
         <label for="no_of_units" class="pt-4 pb-2 text-1xl">Number of Units:</label>
-        <input type="number" name="no_of_units" id="no_of_units" class="border border-gray-300 rounded px-4 py-2" placeholder="Enter project name" value="{{ $project->no_of_units }}" >
+        <input type="number" name="no_of_units" id="no_of_units" class="border border-gray-300 rounded px-4 py-2" placeholder="Enter number of units" value="{{ $project->no_of_units }}" >
 
         <!-- Size -->
         <label for="size" class="pt-4 pb-2 text-1xl">Size (in sq. ft.):</label>
-        <input type="number" name="size" id="size" required class="border border-gray-300 rounded px-4 py-2" placeholder="Enter project name" value="{{ $project->size }}" >
+        <input type="number" name="size" id="size" required class="border border-gray-300 rounded px-4 py-2" placeholder="Enter size per floor" value="{{ $project->size }}" >
 
         <div class="pt-4">
-            <button type="submit" class="btn btn-soft btn-primary w-full">Create Project</button>
+            <button type="submit" class="btn btn-soft btn-primary w-full">Update Project</button>
         </div>
     </form>
 </div>

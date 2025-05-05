@@ -408,9 +408,7 @@ class LandingPage extends Controller
         return Inertia::render('Contact',['countries'=>$array]);
     }
 
-    public function contactPost(Request $request){
-        dd($request);
-    }
+
     public function projectSearch(Request $request){
         $query = $request->get('q');
         $projects = Project::where('name', 'like', '%' . $request->query('q') . '%')->pluck('name')->take(5);

@@ -30,7 +30,7 @@ export default function Slider({ projects }) {
                                 />
                                 {/* Title Text */}
                                 <div className="absolute inset-0 flex items-center justify-center">
-                                    <h2 className="text-green-900 text-3xl font-bold bg-amber-50">
+                                    <h2 className="text-green-900 text-sm md:text-3xl font-bold bg-amber-50">
                                         {projects[0].name}
                                     </h2>
                                 </div>
@@ -61,7 +61,7 @@ export default function Slider({ projects }) {
                                 alt={projects[1].name}
                             />
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <h2 className="text-green-900 text-3xl font-bold bg-amber-50">
+                                <h2 className="text-green-900 text-xl lg:text-3xl font-bold bg-amber-50">
                                     {projects[1].name}
                                 </h2>
                             </div>
@@ -91,7 +91,7 @@ export default function Slider({ projects }) {
                                 alt={projects[2].name}
                             />
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <h2 className="text-green-900 text-3xl font-bold bg-amber-50">
+                                <h2 className="text-green-900 text-xl lg:text-3xl font-bold bg-amber-50">
                                     {projects[2].name}
                                 </h2>
                             </div>
@@ -121,7 +121,7 @@ export default function Slider({ projects }) {
                                 alt={projects[3].name}
                             />
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <h2 className="text-green-900 text-3xl font-bold bg-amber-50">
+                                <h2 className="text-green-900 text-xl lg:text-3xl font-bold bg-amber-50">
                                     {projects[3].name}
                                 </h2>
                             </div>

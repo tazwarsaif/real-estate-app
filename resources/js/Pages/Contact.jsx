@@ -1,16 +1,53 @@
 import Layout from "@/Layouts/Layout.jsx";
-import { router } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 import { motion } from "framer-motion";
 import React, { useState } from "react";
+import toast from "react-hot-toast";
 import Footer from "../Layouts/Footer.jsx";
 const Contact = ({ countries }) => {
     const countryCodes = countries;
+    const props = usePage().props;
     const [prefix, setPrefix] = useState("44"); // default: UK
     const [number, setNumber] = useState("");
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [subject, setSubject] = useState("");
     const [message, setMessage] = useState("");
+    const [formErrors, setFormErrors] = useState({});
+
+    const validateForm = () => {
+        const errors = {};
+
+        if (!name.trim()) {
+            errors.name = "Name is required.";
+        }
+
+        if (!email.trim()) {
+            errors.email = "Email is required.";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            errors.email = "Email is invalid.";
+        }
+
+        if (!prefix.trim() || !/^\d+$/.test(prefix)) {
+            errors.prefix = "Prefix must be numeric.";
+        }
+
+        if (!number.trim()) {
+            errors.number = "Phone number is required.";
+        } else if (!/^\d{7,15}$/.test(number)) {
+            errors.number = "Enter a valid phone number.";
+        }
+
+        if (!subject.trim()) {
+            errors.subject = "Subject is required.";
+        }
+
+        if (!message.trim()) {
+            errors.message = "Message is required.";
+        }
+
+        return errors;
+    };
 
     const handlePrefixChange = (e) => {
         setPrefix(e.target.value);
@@ -33,6 +70,12 @@ const Contact = ({ countries }) => {
     };
     const handleSubmit = async (event) => {
         event.preventDefault();
+        const errors = validateForm();
+        setFormErrors(errors);
+        if (Object.keys(errors).length > 0) {
+            console.log(errors);
+            return;
+        }
         try {
             if (
                 name === "" ||
@@ -41,37 +84,34 @@ const Contact = ({ countries }) => {
                 message === "" ||
                 email === ""
             ) {
-                toast.error("Please Fill the fields");
+                window.alert("Please fill in all fields");
                 return;
             }
-            const formData = {
-                name: name,
-                number: number,
-                subject: subject,
-                message: message,
-                email: email,
-            };
-            console.log(formData);
-            const res = await fetch("https://http://127.0.0.1:8000/contact", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(formData),
-            });
-            console.log(res);
-            const data = await res.json();
 
-            if (!res.ok)
-                throw new Error(data.error || "Failed to create account");
+            const formData = {
+                name,
+                number: `${prefix} ${number}`,
+                subject,
+                message,
+                email,
+                _token: props.csrf_token,
+            };
+
+            const res = router.post(
+                "http://127.0.0.1:8000/api/contactpost",
+                formData
+            );
+            console.log(res);
             toast.success("Message has been sent!");
-            router.visit("/home");
-            return;
+            router.visit("/");
         } catch (error) {
             console.error(error);
-            throw error;
+            toast.error(
+                error.response?.data?.error || "Failed to send message"
+            );
         }
     };
+
     return (
         <>
             <div className="flex flex-col justify-between space-y-52">
@@ -89,6 +129,31 @@ const Contact = ({ countries }) => {
                             <h1 className="text-3xl pb-7 text-center">
                                 Fill this form to connect with us!
                             </h1>
+                            {Object.keys(formErrors).length > 0 && (
+                                <div role="alert" className="alert alert-error">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        className="h-6 w-6 shrink-0 stroke-current"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                        />
+                                    </svg>
+                                    <ul>
+                                        {Object.entries(formErrors).map(
+                                            ([key, value]) => (
+                                                <li key={key}>{value}</li>
+                                            )
+                                        )}
+                                    </ul>
+                                </div>
+                            )}
+
                             <div className="flex flex-col lg:space-x-6 md:flex-row md:justify-around md:space-x-3 space-y-6 md:space-y-0">
                                 <div className="flex flex-col space-y-2 w-full md:w-1/2">
                                     <fieldset className="fieldset">
@@ -185,7 +250,7 @@ const Contact = ({ countries }) => {
                                         className="btn btn-outline btn-success w-full self-start"
                                         type="submit"
                                     >
-                                        Success
+                                        Submit
                                     </button>
                                 </div>
                             </div>

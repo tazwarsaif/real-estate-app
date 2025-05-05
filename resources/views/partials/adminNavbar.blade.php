@@ -17,6 +17,7 @@
             </button>
         </div>
     </div>
+
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="hidden md:hidden px-4 pb-4">
         <a href={{ route('user.home') }} class="block py-2 text-gray-700 hover:text-indigo-600">Home</a>
